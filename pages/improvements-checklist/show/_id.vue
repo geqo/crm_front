@@ -8,10 +8,10 @@
               Name: {{checklists_item.name}}
             </p>
             <p v-if="checklists_item.price">
-              Price: {{checklists_item.price}}
+              Preis: {{checklists_item.price}}
             </p>
             <p v-if="checklists_item.notes">
-              Notes: {{checklists_item.notes}}
+              Notizen: {{checklists_item.notes}}
             </p>
           </v-card>
         </v-col>

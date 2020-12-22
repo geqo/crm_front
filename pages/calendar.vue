@@ -15,7 +15,7 @@
             >
               <v-card color="grey lighten-4" min-width="350px" flat>
                 <v-toolbar color="green" dark>
-                  <v-toolbar-title>Neu Installation</v-toolbar-title>
+                  <v-toolbar-title>Neuer Termin</v-toolbar-title>
                   <v-spacer></v-spacer>
                 </v-toolbar>
                 <v-card-text>
@@ -23,7 +23,7 @@
                       :items="projects"
                       name="Projekte"
                       v-model="installCalendar.project_id"
-                      label="Choose Project"
+                      label="Projekt auswählen"
                       outlined
                       item-text="client_id"
                       item-value="id"
@@ -40,7 +40,7 @@
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
-                          label="Date (read only text field)"
+                          label="Datum"
                           hint="MM/DD/YYYY format"
                           persistent-hint
                           prepend-icon="event"
@@ -62,10 +62,10 @@
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
                           v-model="installCalendar.time"
-                          label="Picker in dialog"
+                          label="Zeit terminieren"
                           prepend-icon="access_time"
                           readonly
-                       
+
                           v-bind="attrs"
                           v-on="on"
                       ></v-text-field>
@@ -84,17 +84,17 @@
                   <v-select
                       v-model="installCalendar.brigades"
                       :items="brigades_list"
-                      label="Choose Team"
+                      label="Team auswählen"
                       item-text="name"
                       item-value="id"
                       outlined
                       multiple
                   ></v-select>
-                  <v-textarea v-model="installCalendar.notes" label="Notes"></v-textarea>
+                  <v-textarea v-model="installCalendar.notes" label="Notizen"></v-textarea>
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn text color="secondary" @click="createNew = false">Close</v-btn>
-                  <v-btn color="primary" type="submit">Create</v-btn>
+                  <v-btn text color="secondary" @click="createNew = false">Schließen</v-btn>
+                  <v-btn color="primary" type="submit">Erstellen</v-btn>
                 </v-card-actions>
               </v-card>
             </v-form>
@@ -193,9 +193,9 @@
                   </v-btn>
                 </v-toolbar>
                 <v-card-text>
-                  <v-text-field v-model="selectedEvent.address" label="Address" :disabled="!edit"></v-text-field>
-                  <v-text-field v-model="selectedEvent.meeting_date" label="Date" :disabled="!edit"></v-text-field>
-                  <v-text-field v-model="selectedEvent.meeting_time" label="Time" :disabled="!edit"></v-text-field>
+                  <v-text-field v-model="selectedEvent.address" label="Adresse" :disabled="!edit"></v-text-field>
+                  <v-text-field v-model="selectedEvent.meeting_date" label="Datum" :disabled="!edit"></v-text-field>
+                  <v-text-field v-model="selectedEvent.meeting_time" label="Zeit" :disabled="!edit"></v-text-field>
                 </v-card-text>
                 <v-card-actions>
                 </v-card-actions>
@@ -213,23 +213,23 @@ import {mapState, mapActions} from 'vuex';
 
 export default {
   middleware: 'authenticated',
-  
+
   data: () => ({
     valid: false,
     installCalendar: {},
     dateMenu: false,
     timeModal: false,
-    
+
     edit: false,
     focus: "",
     type: "month",
     typeToLabel: {
-      month: "Month",
-      week: "Week",
-      day: "Day"
+      month: "Monat",
+      week: "Woche",
+      day: "Tag"
     },
-    chosen: "All Teams",
-    chosen1: "Choose Team",
+    chosen: "Alle Teams",
+    chosen1: "Team auswählen",
     start: null,
     end: null,
     createNew: false,
@@ -290,7 +290,7 @@ export default {
   mounted() {
     this.getReadyForMontageProjects();
     this.getBrigadeList();
-    
+
     this.getCalendar().then(res=> {
       this.$nuxt.$loading.finish();
       this.$refs.calendar.checkChange();
@@ -332,7 +332,7 @@ export default {
       this.$axios.get('projects/by-status-code/3').then(res => {
         this.projects = res.data.data;
       }).catch(error => {
-      
+
       })
     },
     filterBrigad(brigade){
@@ -357,7 +357,7 @@ export default {
     getEventColor(event) {
       return event.color;
     },
- 
+
     prev() {
       this.$refs.calendar.prev();
     },

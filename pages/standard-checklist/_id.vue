@@ -5,7 +5,7 @@
       <v-card class="my-5 elevation-4 d-flex">
         <v-col>
           <v-btn color="success" @click="openProjectDialog('ready')">
-            Ready
+            Fertig
           </v-btn>
         </v-col>
         <v-col>
@@ -99,7 +99,7 @@
             <v-row justify="end" v-if="isAdmin">
               <v-col xl="auto">
                 <v-btn :to="`/project/`+ project.id +'/standard/add'" depressed color="primary">
-                  Add
+                  hinzufügen
                 </v-btn>
               </v-col>
             </v-row>
@@ -114,7 +114,7 @@
         <v-card-title class="headline">{{project.client_id }}</v-card-title>
         <v-card class="pa-6">
           <v-form ref="dialogForm" id="checklistNoteForm">
-            <v-textarea outlined autofocus label="Note" name="notes" :rules="notesRules" :value="checked_checklist.notes"></v-textarea>
+            <v-textarea outlined autofocus label="Notiz" name="notes" :rules="notesRules" :value="checked_checklist.notes"></v-textarea>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" :disabled="disableBtn" text @click="sendChecklistNotes">speichern</v-btn>
@@ -148,7 +148,7 @@
     </v-dialog>
     <v-dialog v-model="confirmDelete" persistent max-width="290">
       <v-card>
-        <v-card-title class="headline">Delete checklist item</v-card-title>
+        <v-card-title class="headline">Checklistenelement löschen</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" text @click="confirmDelete = false">No</v-btn>
@@ -178,10 +178,10 @@
           backgroundColor:"rgb(255,255,255)"
         },
         notesRules: [
-          v => !!v || 'notiz is required',
+          v => !!v || 'Notiz ist erforderlich',
         ],
         filesRules: [
-          v => !!v || 'Files is required',
+          v => !!v || 'Dateien ist erforderlich',
         ],
         valid: true,
         checklistNotForm: {},
@@ -250,7 +250,7 @@
           let formData = new FormData(form);
 
           this.addNoteChecklistsItem({id: this.checked_checklist.id, data: formData}).then(res => {
-              this.$toast.success('Note saved successfully!').goAway(1500);
+              this.$toast.success('Notiz erfolgreich gespeichert!');
               this.checklistNoteDialog = false;
               this.disableBtn = false;
               document.getElementById('checklistNoteForm').reset();
@@ -264,7 +264,7 @@
 
       changeChecklistItemStatus(id, status) {
         this.changeStatus({id: id, status: status}).then(res => {
-          this.$toast.success('Note saved successfully!').goAway(1500);
+          this.$toast.success('Notiz erfolgreich gespeichert!');
         }).catch(err => {
           let message = error.response.data.message;
           this.$toast.error(message).goAway(1500);

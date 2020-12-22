@@ -40,12 +40,12 @@ export default {
         {
           number: "202-03-27",
           date: "02.04.2020",
-          status: "New"
+          status: "Neu"
         },
         {
           number: "202-03-28",
           date: "03.04.2020",
-          status: "New"
+          status: "Neu"
         },
         {
           number: "202-03-29",

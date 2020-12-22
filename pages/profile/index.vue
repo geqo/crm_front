@@ -39,7 +39,7 @@
     </v-flex>
     <v-dialog v-model="confirmDelete" persistent max-width="290">
       <v-card>
-        <v-card-title class="headline">Delete Nutzer</v-card-title>
+        <v-card-title class="headline">Nutzer löschen</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" text @click="confirmDelete = false">No</v-btn>
@@ -52,7 +52,7 @@
 
 <script>
   import {mapState, mapActions} from 'vuex';
-  
+
 export default {
   middleware: 'authenticated',
   data() {
@@ -91,7 +91,7 @@ export default {
         this.$toast.error(error).goAway(1500);
       });
     },
-   
+
   }
 };
 </script>

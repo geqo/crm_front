@@ -37,7 +37,7 @@
     </v-flex>
   <v-dialog v-model="confirmDelete" persistent max-width="290">
     <v-card>
-      <v-card-title class="headline">Delete Brigad</v-card-title>
+      <v-card-title class="headline">Team löschen</v-card-title>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="green darken-1" text @click="confirmDelete = false">No</v-btn>
@@ -80,7 +80,7 @@ export default {
     },
     removeBrigad() {
       this.deleteBrigad({id: this.brigad_id}).then(res => {
-        this.$toast.success('Brigad deleted!').goAway(1500);
+        this.$toast.success('Team gelöscht!').goAway(1500);
         this.confirmDelete = false;
         this.brigad_id = null;
       }).catch(err => {

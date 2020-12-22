@@ -5,7 +5,7 @@
       <v-card class="my-5 elevation-4 d-flex">
         <v-col>
           <v-btn color="success" @click="openProjectDialog('ready')">
-            Ready
+            Fertig
           </v-btn>
         </v-col>
         <v-col>
@@ -25,18 +25,18 @@
             <p>
               By signing this checklist, you agree that the work was rendered efficiently and in accordance with the list of works indicated in the order sheet.
             </p>
-            <v-text-field name="first_name" v-if="project_type === 'ready'" label="First Name"></v-text-field>
-            <v-text-field name="last_name" v-if="project_type === 'ready'" label="Last Name"></v-text-field>
+            <v-text-field name="first_name" v-if="project_type === 'ready'" label="Vorname"></v-text-field>
+            <v-text-field name="last_name" v-if="project_type === 'ready'" label="Nachname"></v-text-field>
             <vue-signature v-if="project_type === 'ready'" ref="signature" class="signature" :sigOption="option" :w="'100%'" :h="'58vh'" ></vue-signature>
             <v-row class="d-flex flex-wrap-reverse">
               <v-checkbox class="pr-6" v-model="dialogForm.status" label="Kelne Beanstandung" value="1"></v-checkbox>
               <v-checkbox class="pr-6" v-model="dialogForm.status" label="Siehe Fehler protokoll" value="0"></v-checkbox>
             </v-row>
-            <v-btn v-if="project_type === 'ready'"  color="green" @click="clearSignature">Clear</v-btn>
+            <v-btn v-if="project_type === 'ready'"  color="green" @click="clearSignature">Klar</v-btn>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn large color="green darken-1" @click="projectDialog = false">Cancel</v-btn>
-              <v-btn large color="primary darken-1" :disabled="disableBtn" @click="saveNote">Save</v-btn>
+              <v-btn large color="green darken-1" @click="projectDialog = false">Stornieren</v-btn>
+              <v-btn large color="primary darken-1" :disabled="disableBtn" @click="saveNote">Sparen</v-btn>
             </v-card-actions>
           </v-form>
         </v-card>
@@ -66,10 +66,10 @@
                   <v-list-item-title>{{checklist.name}}</v-list-item-title>
                 </v-list-item-content>
                 <v-btn color="secondary" class="mr-3" v-if="isForeman || isAdmin" @click="showChecklistFileDialog(checklist)">
-                  Add images
+                  Bild hinzufügen
                 </v-btn>
                 <v-btn color="primary" class="mr-3" v-if="isForeman || isAdmin" @click="showChecklistNotDialog(checklist)">
-                  Add note
+                  Notiz hinzufügen
                 </v-btn>
                 <v-btn class="mr-12" :to="`/improvements-checklist/show/` + checklist.id"  icon color="primary">
                   <v-icon color="green darken-2">mdi-eye</v-icon>
@@ -84,7 +84,7 @@
             <v-row justify="end" v-if="isAdmin">
               <v-col xl="auto">
                 <v-btn :to="`/project/`+ project.id +'/improvements/add'" depressed color="primary">
-                  Add
+                  hinzufügen
                 </v-btn>
               </v-col>
             </v-row>
@@ -96,7 +96,7 @@
 
     <v-dialog v-model="confirmDelete" persistent max-width="290">
       <v-card>
-        <v-card-title class="headline">Delete</v-card-title>
+        <v-card-title class="headline">gelöscht</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" text @click="confirmDelete = false">No</v-btn>
@@ -110,7 +110,7 @@
         <v-card-title class="headline">{{project.client_id }}</v-card-title>
         <v-card class="pa-6">
           <v-form ref="dialogForm" id="checklistNoteForm">
-            <v-textarea outlined autofocus label="Note" name="notes" :rules="notesRules" :value="checked_checklist.notes"></v-textarea>
+            <v-textarea outlined autofocus label="Notiz" name="notes" :rules="notesRules" :value="checked_checklist.notes"></v-textarea>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text :disabled="disableBtn" @click="sendChecklistNotes">speichern</v-btn>
@@ -125,7 +125,7 @@
         <v-card-title class="headline">{{project.client_id }}</v-card-title>
         <v-card class="pa-6">
           <v-form ref="dialogForm" id="checklistFileForm">
-            <v-file-input ref="checklistFile" :rules="filesRules" name="files[]" show-size counter multiple label="File input"></v-file-input>
+            <v-file-input ref="checklistFile" :rules="filesRules" name="files[]" show-size counter multiple label="Dateieingabe"></v-file-input>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" :disabled="disableBtn"  text @click="sendChecklistFiles">speichern</v-btn>
@@ -156,10 +156,10 @@
           backgroundColor:"rgb(255,255,255)"
         },
         notesRules: [
-          v => !!v || 'Notes is required',
+          v => !!v || 'Notiz ist erforderlich',
         ],
         filesRules: [
-          v => !!v || 'Files is required',
+          v => !!v || 'Datei ist erforderlich',
         ],
         valid: true,
         checklistNotForm: {},
@@ -228,7 +228,7 @@
           let formData = new FormData(form);
           this.disableBtn = true;
           this.addNoteChecklistsItem({id: this.checked_checklist.id, data: formData}).then(res => {
-            this.$toast.success('Note saved successfully!').goAway(1500);
+            this.$toast.success('Notiz erfolgreich gespeichert!');
             this.checklistNoteDialog = false;
             this.disableBtn = false;
             document.getElementById('checklistNoteForm').reset();

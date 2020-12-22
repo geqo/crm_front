@@ -3,12 +3,12 @@
     <v-flex xs6 class="fullwidth">
       <v-row>
         <v-col>
-          <h1>Order #{{project.client_id}}</h1>
+          <h1>Auftrag #{{project.client_id}}</h1>
         </v-col>
         <v-spacer></v-spacer>
         <v-col class="text-right">
           <v-btn v-if="project.status_id === 1 && (isStorekeeper || isAdmin)" color="primary" @click="setStatusWorking(project.id)">In Arbeit</v-btn>
-          <v-btn v-if="project.status_id === 2 && (isStorekeeper || isAdmin)" color="primary" @click="setStatusReadyToMontage(project.id)">Fertig to Montage</v-btn>
+          <v-btn v-if="project.status_id === 2 && (isStorekeeper || isAdmin)" color="primary" @click="setStatusReadyToMontage(project.id)">Montagebereit</v-btn>
           <v-chip class="ma-2" color="secondary">{{project.created_at}}</v-chip>
           <v-chip class="ma-2" :color="project.statusColor">{{project.statusText}}</v-chip>
         </v-col>
@@ -18,23 +18,23 @@
         <v-col xs9>
           <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="submit()" id="projectForm">
             <v-text-field label="Client ID" v-if="project" v-model="project.client_id" disabled></v-text-field>
-            <v-text-field name="address" disabled label="Address" :value="project.address"></v-text-field>
+            <v-text-field name="address" disabled label="Adresse" :value="project.address"></v-text-field>
             <v-text-field name="shipping_address" :disabled="project.status_id === 5" label="Shipping Address" :value="project.shipping_address"></v-text-field>
             <v-text-field name="client_mobil" disabled label="Client Mobil" :value="project.client_mobil"></v-text-field>
-            <v-text-field name="order_date" disabled label="Order Date" :value="project.order_date"></v-text-field>
-            <v-text-field name="order_number" disabled label="Order Number" :value="project.order_number"></v-text-field>
-            <v-text-field label="Full Name" v-model="project.full_name" disabled></v-text-field>
-            <v-text-field label="Brigad" v-if="project.foremans && project.foremans.length" :value="project.foremans[0].name" disabled></v-text-field>
+            <v-text-field name="order_date" disabled label="Auftrag Datum" :value="project.order_date"></v-text-field>
+            <v-text-field name="order_number" disabled label="Auftrag Nummer" :value="project.order_number"></v-text-field>
+            <v-text-field label="Vollständiger Name" v-model="project.full_name" disabled></v-text-field>
+            <v-text-field label="Team" v-if="project.foremans && project.foremans.length" :value="project.foremans[0].name" disabled></v-text-field>
             <v-row>
               <v-col xs1>
-                <v-text-field name="brigadir_price" type="number" label="Foreman Price" :value="project.brigadir_price" :disabled="(!isForeman && !isAdmin)"></v-text-field>
+                <v-text-field name="brigadir_price" type="number" label="Foreman Preis" :value="project.brigadir_price" :disabled="(!isForeman && !isAdmin)"></v-text-field>
               </v-col>
               <v-col xs9>
-                <v-text-field name="price" type="number" label="Price" :value="project.price" :disabled="(!isManager && !isAdmin)"></v-text-field>
+                <v-text-field name="price" type="number" label="Preis" :value="project.price" :disabled="(!isManager && !isAdmin)"></v-text-field>
               </v-col>
             </v-row>
-            <v-textarea name="notes" v-if="project.status_id === 2" label="Notes" :value="project.notes"></v-textarea>
-            <v-file-input :rules="filesRules" ref="projectFile" name="files[]" v-if="project.status_id === 2" show-size counter multiple label="File input"></v-file-input>
+            <v-textarea name="notes" v-if="project.status_id === 2" label="Notizen" :value="project.notes"></v-textarea>
+            <v-file-input :rules="filesRules" ref="projectFile" name="files[]" v-if="project.status_id === 2" show-size counter multiple label="Dateieingabe"></v-file-input>
             <v-btn type="submit" color="primary">Save</v-btn>
           </v-form>
         </v-col>
@@ -78,12 +78,12 @@
               </v-card>
             </div>
           </div>
-        
+
           <v-btn color="green" type="button" @click="showImages">
             <span>Show Images</span>
           </v-btn>
         </v-col>
-    
+
         <v-col v-if="project.mail_files && project.mail_files.length">
           <v-row>
             <v-col class="align-center col d-flex justify-center">
@@ -108,17 +108,17 @@
                   </v-list-item-title>
                   <v-list-item-subtitle v-if="file.type === 'pdf'">File downloaded from email</v-list-item-subtitle>
                 </v-list-item-content>
-      
+
                 <v-list-item-avatar tile size="40" color="grey">
                   <img v-if="file.icon_path" :src="file.icon_path" alt />
                   <img v-else src="~assets/img/no-image.png" alt />
                 </v-list-item-avatar>
               </v-list-item>
-    
+
               <v-card-actions>
-      
-      
-              
+
+
+
               </v-card-actions>
             </v-card>
           </div>
@@ -149,7 +149,7 @@
 
             <v-card-actions>
               <v-btn color="error" v-if="project.status_id !== 5 || project.status_id !== 6">
-                <a href="" @click.prevent="deleteFile(file.id)">Delete</a>
+                <a href="" @click.prevent="deleteFile(file.id)">löschen</a>
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -191,8 +191,8 @@
           </template>
         </v-col>
       </v-row>
-     
-   
+
+
       <v-row>
         <v-col>
           <v-timeline :reverse="true" dense>
@@ -233,7 +233,7 @@
         <v-card
           v-if="projectNotesList.length"
         >
-        <v-list-item>Notes:</v-list-item>
+        <v-list-item>Notizen:</v-list-item>
         <v-list-item two-line
            v-for="(note, i) in projectNotesList"
            :key="i"
@@ -246,17 +246,17 @@
         <v-card v-if="!projectImagesList.length && !projectNotesList.length">
           <v-list-item two-line>
             <v-list-item-content>
-              <v-list-item-subtitle>This project don't have images or notes</v-list-item-subtitle>
+              <v-list-item-subtitle>Dieses Projekt hat keine Bilder oder Notizen</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-card>
       </v-card>
     </v-dialog>
-    
+
     <v-dialog fullscreen v-model="projectDialog" persistent>
       <v-card class="pa-6">
         <v-form ref="dialogForm" id="dialogForm" v-model="dialogForm" >
-          <v-textarea label="Note" name="notes" :rules="notesRules" :value="dialogForm.note"></v-textarea>
+          <v-textarea label="Notiz" name="notes" :rules="notesRules" :value="dialogForm.note"></v-textarea>
           <vue-signature v-if="project_type === 'ready'" ref="signature" class="signature" :sigOption="option" :w="'100%'" :h="'68vh'" ></vue-signature>
           <v-btn class="mt-2" v-if="project_type === 'ready'" color="green" @click="undoSignature">Undo</v-btn>
           <v-btn class="mt-2" v-if="project_type === 'ready'" color="green" @click="clearSignature">Clear</v-btn>
@@ -298,10 +298,10 @@
               dialogFormValid: true,
               projectDialog: false,
               notesRules: [
-                v => !!v || 'Notes is required',
+                v => !!v || 'Notizen sind erforderlich',
               ],
               filesRules: [
-                v => !!v || 'Files is required',
+                v => !!v || 'Dateien sind erforderlich',
               ],
               form_data: {},
               project_type: '',
@@ -330,7 +330,7 @@
             let message = error.response.data.message;
             this.$toast.error(message).goAway(1500);
           });
-        
+
         },
         methods: {
             ...mapActions('projects', ['getProject', 'changeProjectStatusToWorking', 'readyForMontage', 'changeProjectStatusReadyToMontage', 'changeProjectStatus', 'update', 'deleteProjectFile']),
@@ -353,7 +353,7 @@
             },
             deleteFile (id) {
               this.deleteProjectFile({id: id}).then(res => {
-                this.$toast.success('File Deleted successfully!').goAway(1500);
+                this.$toast.success('Datei erfolgreich gelöscht!');
               }).catch(error => {
                 let message = error.response.data.message;
                 this.$toast.error(message).goAway(1500);
@@ -407,11 +407,11 @@
               let formData = new FormData(form);
               if(this.$refs.form.validate()){
                 this.update({id: this.$route.params.id, data: formData}).then(res => {
-                  this.$toast.success('Project updated successfully!').goAway(1500);
+                  this.$toast.success('Project updated successfully!');
                   this.$refs.projectFile.value = null;
                 }).catch(error => {
                   let message = error.response.data.message;
-                  this.$toast.error(message).goAway(1500);
+                  this.$toast.error(message);
                 })
               }
             },

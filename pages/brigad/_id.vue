@@ -4,7 +4,7 @@
             <v-card class="my-5 elevation-4">
                 <v-list-item>
                     <v-list-item-content>
-                        <v-list-item-title>{{brigad_id == 'add' ? 'Add' : 'Edit'}} Brigad</v-list-item-title>
+                        <v-list-item-title>{{brigad_id == 'add' ? 'hinzufügen' : 'bearbeiten'}} Brigad</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-card>
@@ -54,8 +54,8 @@
                       löschen
                     </v-btn>
                 </v-row>
-                
-                
+
+
                 <v-btn
                     color="primary"
                     @click="send"
@@ -81,7 +81,7 @@
         },
         foreman_id: {},
         nameRules: [
-          v => !!v || 'Name is required',
+          v => !!v || 'Name ist erforderlich',
         ],
       };
     },

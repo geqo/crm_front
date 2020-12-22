@@ -3,7 +3,7 @@
     <v-flex xs6 class="fullwidth">
       <v-row>
         <v-col>
-          <h1>Order #{{project.number}}</h1>
+          <h1>Auftrag #{{project.number}}</h1>
         </v-col>
         <v-spacer></v-spacer>
         <v-col class="text-right">
@@ -13,9 +13,9 @@
       </v-row>
       <v-row>
         <v-col xs9>
-          <v-text-field label="Client Name" v-model="project.number" disabled></v-text-field>
-          <v-text-field label="Client Address" v-model="project.address" disabled></v-text-field>
-          <v-text-field label="Notes" v-model="project.note" disabled></v-text-field>
+          <v-text-field label="Kundenname" v-model="project.number" disabled></v-text-field>
+          <v-text-field label="Kundenadresse" v-model="project.address" disabled></v-text-field>
+          <v-text-field label="Notizen" v-model="project.note" disabled></v-text-field>
           <v-btn color="primary" to="/brigad-form">Complete (confirm)</v-btn>
         </v-col>
         <v-spacer></v-spacer>

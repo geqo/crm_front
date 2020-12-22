@@ -4,7 +4,7 @@
       <h1>Survey for order #202-03-27 completion</h1>
       <v-row>
         <v-col>
-          <h1>Order #{{project.number}}</h1>
+          <h1>Auftrag #{{project.number}}</h1>
         </v-col>
         <v-spacer></v-spacer>
         <v-col class="text-right">
@@ -56,7 +56,7 @@
             </v-list-item>
 
             <v-card-actions>
-              <v-btn text>Delete</v-btn>
+              <v-btn text>löschen</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>

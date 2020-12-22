@@ -49,7 +49,7 @@
         </v-flex>
         <v-dialog v-model="confirmDelete" persistent max-width="290">
             <v-card>
-                <v-card-title class="headline">Delete Fliale</v-card-title>
+                <v-card-title class="headline">Filiale löschen</v-card-title>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="green darken-1" text @click="confirmDelete = false">No</v-btn>

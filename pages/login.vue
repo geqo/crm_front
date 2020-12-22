@@ -16,7 +16,7 @@
                 <v-text-field
                   v-model="password"
                   id="password"
-                  label="Password"
+                  label="Passwort"
                   name="password"
                   prepend-icon="lock"
                   type="password"
@@ -71,7 +71,7 @@
                       })
                   }
               });
-            
+
           },
           getUser() {
             this.$axios.get('/auth/me').then((resp) => {

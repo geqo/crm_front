@@ -20,7 +20,7 @@
                     label="Name"
                     required
                 ></v-text-field>
-                
+
                 <v-text-field
                     v-model="profileData.email"
                     :rules="emailRules"
@@ -29,18 +29,18 @@
                 ></v-text-field>
                 <v-text-field
                     v-model="profileData.password"
-                    label="Password"
+                    label="Passwort"
                     required
                 ></v-text-field>
                 <v-select
                     v-model="profileData.role_id"
                     :items="roles"
                     @input="changeRole"
-                    :rules="[v => !!v || 'Role is required']"
+                    :rules="[v => !!v || 'Role ist erforderlich']"
                     label="Role"
                     required
                 ></v-select>
-                
+
                 <v-select
                     v-if="fillials.length"
                     v-model="profileData.fillial_id"
@@ -51,7 +51,7 @@
                     label="Fillial"
                     required
                 ></v-select>
-                
+
                 <v-btn
                     color="primary"
                     @click="send"
@@ -59,14 +59,14 @@
                     Speichern
                 </v-btn>
             </v-form>
-            
+
             <v-form ref="credentialsForm" class="mt-10">
                 <p>Profile Passwort aktualisieren</p>
                 <v-text-field
                   v-model="profileCredentials.password"
                   label="Passwort"
                   type="password"
-                  :rules="[v => !!v || 'Password ist erforderlich']"
+                  :rules="[v => !!v || 'Passwort ist erforderlich']"
                   required
                 ></v-text-field>
                 <v-text-field
@@ -83,7 +83,7 @@
                     Passwort aktualisieren
                 </v-btn>
             </v-form>
-            
+
         </v-flex>
     </v-layout>
 </template>
@@ -98,13 +98,13 @@
         user_id: null,
         valid: true,
         nameRules: [
-          v => !!v || 'Name is required',
+          v => !!v || 'Name ist erforderlich',
         ],
         passwordRules: [
-          v => !!v || 'Name is required',
+          v => !!v || 'Name ist erforderlich',
         ],
         emailRules: [
-          v => !!v || 'E-mail is required',
+          v => !!v || 'E-mail ist erforderlich',
           v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
         ],
         roles: [
@@ -130,7 +130,7 @@
         this.getProfile({id: this.user_id}).then(res => {
           this.profileData = {...this.profile};
         }).catch(err => {
-        
+
 
         })
       } else {
@@ -181,7 +181,7 @@
               _this.$toast.error(error).goAway(1500);
             })
           }
-          
+
         }
       },
     }

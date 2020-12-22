@@ -4,7 +4,7 @@
             <v-card class="my-5 elevation-4">
                 <v-list-item>
                     <v-list-item-content>
-                        <v-list-item-title>{{id === 'add' ? 'Add' : 'Edit'}} <span>{{type}}</span> checklist</v-list-item-title>
+                        <v-list-item-title>{{id === 'add' ? 'hinzufügen' : 'bearbeiten'}} <span>{{type}}</span> checklist</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-card>
@@ -22,14 +22,14 @@
                     name="name"
                     required
                 ></v-text-field>
-                
+
                 <v-text-field
                   v-model="checklistData.price"
                   :counter="10"
                   type="number"
                   v-if="type === 'improvements'"
                   :rules="priceRules"
-                  label="Price"
+                  label="Preis"
                   name="price"
                   required
                 ></v-text-field>
@@ -40,7 +40,7 @@
                     Speichern
                 </v-btn>
             </v-form>
-        
+
         </v-flex>
     </v-layout>
 </template>
@@ -52,16 +52,17 @@
     middleware: 'authenticated',
     data() {
       return {
+        type: null,
         id: null,
         valid: true,
         nameRules: [
-          v => !!v || 'Name is required',
+          v => !!v || 'Name ist erforderlich',
         ],
         priceRules: [
-          v => !!v || 'Price is required',
+          v => !!v || 'Price ist erforderlich',
         ],
         emailRules: [
-          v => !!v || 'E-mail is required',
+          v => !!v || 'E-mail ist erforderlich',
           v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
         ],
         roles: [

@@ -20,14 +20,14 @@
                     label="Name"
                     required
                 ></v-text-field>
-                
+
                 <v-text-field
                     v-model="formData.email"
                     :rules="emailRules"
                     label="E-mail"
                     required
                 ></v-text-field>
-                
+
                 <v-btn
                     color="primary"
                     @click="send"
@@ -35,7 +35,7 @@
                     Speichern
                 </v-btn>
             </v-form>
-            
+
         </v-flex>
     </v-layout>
 </template>
@@ -51,10 +51,10 @@
         valid: true,
         formData: {},
         nameRules: [
-          v => !!v || 'Name is required',
+          v => !!v || 'Name ist erforderlich',
         ],
         emailRules: [
-          v => !!v || 'E-mail is required',
+          v => !!v || 'E-mail ist erforderlich',
           v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
         ],
       };
