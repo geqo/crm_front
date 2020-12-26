@@ -1,127 +1,161 @@
 <template>
   <v-layout column>
     <v-flex>
-      <v-row class="justify-end" v-if="project.status_id === 4 && (isObinspector || isForeman || isAdmin)">
-        <v-card class="my-5 elevation-4 d-flex">
-          <v-col>
-            <v-btn color="success" @click="openProjectDialog('ready')">
-              Fertig
-            </v-btn>
-          </v-col>
-          <v-col>
-            <v-btn color="primary" @click="openProjectDialog('backToReadyForMontage')">
-              Back to ready for testing
-            </v-btn>
-          </v-col>
-          <v-col>
-            <v-btn color="red" @click="openProjectDialog('disputed')">
-              Closed the project, something want wrong
-            </v-btn>
-          </v-col>
-        </v-card>
-        <v-dialog fullscreen v-model="projectDialog" persistent>
-          <v-card class="pa-6">
-            <v-form ref="dialogForm" id="dialogForm">
-              <p>
-                By signing this checklist, you agree that the work was rendered efficiently and in accordance with the
-                list of works indicated in the order sheet.
-              </p>
-              <v-text-field name="first_name" v-if="project_type === 'ready'" label="First Name"></v-text-field>
-              <v-text-field name="last_name" v-if="project_type === 'ready'" label="Last Name"></v-text-field>
-              <vue-signature v-if="project_type === 'ready'" ref="signature" class="signature" :sigOption="option"
-                             :w="'100%'" :h="'58vh'"></vue-signature>
-              <v-row class="d-flex flex-wrap-reverse">
-                <v-checkbox class="pr-6" v-model="dialogForm.status" label="Kelne Beanstandung" value="1"></v-checkbox>
-                <v-checkbox class="pr-6" v-model="dialogForm.status" label="Siehe Fehler protokoll"
-                            value="0"></v-checkbox>
-              </v-row>
-              <v-btn v-if="project_type === 'ready'" color="green" @click="clearSignature">Clear</v-btn>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn large color="green darken-1" @click="projectDialog = false">Cancel</v-btn>
-                <v-btn large color="primary darken-1" :disabled="disableBtn" @click="saveNote">Save</v-btn>
-              </v-card-actions>
-            </v-form>
-          </v-card>
-        </v-dialog>
-      </v-row>
-    </v-flex>
-    <v-row v-if="project.status_id > 3">
-      <v-col>
-        <v-flex xs12 class="fullwidth">
-          <v-card class="my-5 elevation-4">
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>endabnahmeprotokoll</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-card>
-          <v-list>
-            <v-card class="my-5">
+      <v-row v-if="project.status_id > 3">
+        <v-col>
+          <v-flex xs12 class="fullwidth">
+            <v-card class="my-5 elevation-4">
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>endabnahmeprotokoll</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-card>
+            <v-list>
               <v-list-item>
                 <v-spacer></v-spacer>
                 <v-chip class="ma-2" color="secondary">Kelne Beanstandung</v-chip>
                 <v-chip class="ma-2" color="secondary">Siehe Fehler protokoll</v-chip>
               </v-list-item>
-            </v-card>
-            <v-card
-              class="my-5 elevation-4"
-              v-for="(checklist, i) in checklists"
-              :key="checklist.id"
-              v-if="checklist.type === 'standard'"
 
-            >
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>{{ checklist.name }}</v-list-item-title>
-                </v-list-item-content>
-                <v-btn color="secondary" class="mr-3" v-if="isForeman || isAdmin"
-                       @click="showChecklistFileDialog(checklist)">
-                  Bild hinzufügen
-                </v-btn>
-                <v-btn color="primary" class="mr-12" v-if="isForeman || isAdmin"
-                       @click="showChecklistNotDialog(checklist)">
-                  Notiz hinzufügen
-                </v-btn>
-                <v-btn class="mr-12" v-if="checklist.notes || checklist.images.length"
-                       :to="`/standard-checklist/show/` + checklist.id" icon color="primary">
-                  <v-icon color="green darken-2">mdi-eye</v-icon>
-                </v-btn>
-                <v-btn class="mr-12" icon color="primary" @click="changeChecklistItemStatus(checklist.id, 1)">
-                  <v-icon color="green darken-2" v-if="checklist.status">mdi-check-box-outline</v-icon>
-                  <v-icon color="green darken-2" v-else>mdi-checkbox-blank-outline</v-icon>
-                </v-btn>
-                <v-btn class="ml-12 mr-8" icon color="primary" @click="changeChecklistItemStatus(checklist.id,0)">
-                  <v-icon color="green darken-2" v-if="checklist.status || checklist.status == null">
-                    mdi-checkbox-blank-outline
-                  </v-icon>
-                  <v-icon color="green darken-2" v-else>mdi-check-box-outline</v-icon>
-                </v-btn>
-                <v-chip class="ma-2" v-if="isAdmin">
-                  <v-btn icon color="error" @click="showConfirmDeleteChecklistDialog( checklist.id)">
-                    <v-icon>delete</v-icon>
+              <v-card
+                class="my-5 elevation-4"
+                v-for="(checklist, i) in checklists"
+                :key="checklist.id"
+                v-if="checklist.type === 'standard'"
+
+              >
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-banner elevation="0" max-width="90%">{{ checklist.name }}</v-banner>
+                  </v-list-item-content>
+                  <v-btn color="secondary" class="mr-3" v-if="isForeman || isAdmin"
+                         @click="showChecklistFileDialog(checklist)">
+                    Bild hinzufügen
                   </v-btn>
-                </v-chip>
-              </v-list-item>
-            </v-card>
-            <v-row justify="end" v-if="isAdmin">
-              <v-col xl="auto">
-                <v-btn :to="`/project/`+ project.id +'/standard/add'" depressed color="primary">
-                  hinzufügen
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-list>
-        </v-flex>
-      </v-col>
-    </v-row>
-    <v-flex>
+                  <v-btn color="primary" class="mr-3" v-if="isForeman || isAdmin"
+                         @click="showChecklistNotDialog(checklist)">
+                    Notiz hinzufügen
+                  </v-btn>
+                  <v-btn class="mr-3" v-if="checklist.notes || checklist.images.length"
+                         :to="`/standard-checklist/show/` + checklist.id" icon color="primary">
+                    <v-icon color="green darken-2">mdi-eye</v-icon>
+                  </v-btn>
+                  <toggle-button class="mr-3 ml-6"
+                                 :value="checklist.status === null ? true : !!checklist.status"
+                                 :font-size="14"
+                                 :labels="{checked: 'in Ordnung', unchecked: 'Warnung'}"
+                                 :sync="true"
+                                 :color="{checked: '#4caf50', unchecked: '#f44336', disabled: '#808080'}"
+                                 :width="115"
+                                 :height="32"
+                                 @change="changeChecklistItemStatus(checklist.id, $event.value)"
+                  />
+                  <v-chip class="" v-if="isAdmin">
+                    <v-btn icon color="error" @click="showConfirmDeleteChecklistDialog( checklist.id)">
+                      <v-icon>delete</v-icon>
+                    </v-btn>
+                  </v-chip>
+                </v-list-item>
+              </v-card>
+
+            </v-list>
+          </v-flex>
+        </v-col>
+      </v-row>
     </v-flex>
+    <v-flex>
+      <v-row v-if="project.status_id === 4 && (isObinspector || isForeman || isAdmin)">
+        <v-card width="100%" class="mx-3 d-flex" flat>
+          <v-btn v-if="isAdmin" :to="`/project/`+ project.id +'/standard/add'" depressed color="primary">
+            hinzufügen
+          </v-btn>
+
+          <v-spacer></v-spacer>
+
+          <v-btn class="mr-5" :color="finalStatus ? 'success' : 'red'" @click="openProjectDialog('ready')">
+            {{ finalStatus ? 'Fertig' : 'Closed the project, something want wrong' }}
+          </v-btn>
+          <v-btn color="primary" @click="openProjectDialog('backToReadyForMontage')">
+            Back to ready for testing
+          </v-btn>
+        </v-card>
+      </v-row>
+    </v-flex>
+
+    <v-dialog fullscreen v-model="projectDialog" persistent>
+      <v-card class="mx-6 d-flex flex-column">
+
+        <v-card-title>
+          By signing this checklist, you agree that the work was rendered efficiently and in accordance with the
+          list of works indicated in the order sheet.
+        </v-card-title>
+
+        <v-card-text class="flex-grow-1">
+          <v-form v-model="formValidate" ref="dialogForm" id="dialogForm">
+            <div class="d-flex">
+
+              <v-card class="signature-box" elevation="0">
+                <v-text-field :rules="requiredRule" name="first_name1" v-if="project_type === 'ready'"
+                              label="First Name"></v-text-field>
+                <v-text-field :rules="requiredRule" name="last_name1" v-if="project_type === 'ready'"
+                              label="Last Name"></v-text-field>
+                <vue-signature
+                  :rules="requiredRule"
+                  v-if="project_type === 'ready'"
+                  ref="signature1"
+                  class="signature"
+                  :sigOption="option"
+                  :w="'100%'"
+                  :h="'62vh'"
+                />
+                <v-card-actions>
+                  <v-btn v-if="project_type === 'ready'" color="green" @click="$refs.signature1.clear()">Clear</v-btn>
+                </v-card-actions>
+              </v-card>
+              <v-card class="signature-box" elevation="0">
+
+                <v-text-field :rules="requiredRule" name="first_name2" v-if="project_type === 'ready'" label="First Name"></v-text-field>
+                <v-text-field :rules="requiredRule" name="last_name2" v-if="project_type === 'ready'" label="Last Name"></v-text-field>
+                <vue-signature
+                  :rules="requiredRule"
+                  v-if="project_type === 'ready'"
+                  ref="signature2"
+                  class="signature"
+                  :sigOption="option"
+                  :w="'100%'"
+                  :h="'62vh'"
+                />
+
+                <v-card-actions>
+                  <v-btn v-if="project_type === 'ready'" color="green" @click="$refs.signature2.clear()">Clear</v-btn>
+                </v-card-actions>
+              </v-card>
+
+            </div>
+          </v-form>
+        </v-card-text>
+
+        <v-card-actions class="px-10">
+          <span class="text-h6 mr-5">Status:</span>
+          <v-chip
+            :color="finalStatus ? '#4caf50' : '#f44336'"
+            class="font-weight-black"
+          >
+            {{ finalStatus ? 'Kelne Beanstandung' : 'Siehe Fehler protokoll' }}
+          </v-chip>
+          <v-spacer></v-spacer>
+          <v-btn large color="warning darken-1" @click="projectDialog = false">Cancel</v-btn>
+          <v-btn large color="primary darken-1" :disabled="disableBtn" @click="saveNote">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-dialog v-model="checklistNoteDialog" max-width="500">
       <v-card>
         <v-card-title class="headline">{{ project.client_id }}</v-card-title>
         <v-card class="pa-6">
-          <v-form ref="dialogForm" id="checklistNoteForm">
+          <v-form ref="checklistNoteForm" id="checklistNoteForm">
             <v-textarea outlined autofocus label="Notiz" name="notes" :rules="notesRules"
                         :value="checked_checklist.notes"></v-textarea>
             <v-card-actions>
@@ -132,12 +166,11 @@
         </v-card>
       </v-card>
     </v-dialog>
-
     <v-dialog v-model="checklistFileDialog" max-width="500">
       <v-card>
         <v-card-title class="headline">{{ project.client_id }}</v-card-title>
         <v-card class="pa-6">
-          <v-form ref="dialogForm" id="checklistFileForm">
+          <v-form ref="checklistFileForm" id="checklistFileForm">
             <v-file-input accept="image/png, image/jpeg, image/bmp;capture=camera"
                           ref="checklistFile"
                           :rules="filesRules"
@@ -165,16 +198,18 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
   </v-layout>
 </template>
 
 <script>
+import { ToggleButton } from 'vue-js-toggle-button'
 import VueSignature from 'vue-signature'
 import { mapActions, mapState } from 'vuex';
 
 export default {
   components: {
-    VueSignature
+    VueSignature, ToggleButton
   },
   data() {
     return {
@@ -186,6 +221,9 @@ export default {
         penColor: 'rgb(0, 0, 0)',
         backgroundColor: 'rgb(255,255,255)'
       },
+      requiredRule: [
+        v => !!v || 'Notiz ist erforderlich',
+      ],
       notesRules: [
         v => !!v || 'Notiz ist erforderlich',
       ],
@@ -201,13 +239,20 @@ export default {
       disableBtn: false,
       checklistNoteDialog: false,
       checklistFileDialog: false,
+      formValidate: true,
     }
   },
   computed: {
     ...mapState({
       checklists: state => state.checklist.checklists,
       project: state => state.projects.project,
-    })
+    }),
+    finalStatus() {
+      return this.checklists.every(checklist => {
+        if(checklist.status === null) checklist.status = 1
+        return checklist.status
+      });
+    }
   },
   mounted() {
     this.getProject({id: this.$route.params.id}).then(() => {
@@ -248,7 +293,7 @@ export default {
       }).catch(err => {
         this.disableBtn = false;
         let message = error.response.data.message;
-        this.$toast.error(message).goAway(1500);
+        this.$toast.error(message);
       })
 
     },
@@ -266,17 +311,17 @@ export default {
         }).catch(err => {
           this.disableBtn = false;
           let message = error.response.data.message;
-          this.$toast.error(message).goAway(1500);
+          this.$toast.error(message);
         })
       }
     },
 
     changeChecklistItemStatus(id, status) {
-      this.changeStatus({id: id, status: status}).then(res => {
+      this.changeStatus({id: id, status: status * 1}).then(res => {
         this.$toast.success('Notiz erfolgreich gespeichert!');
       }).catch(err => {
         let message = error.response.data.message;
-        this.$toast.error(message).goAway(1500);
+        this.$toast.error(message);
       })
     },
     showConfirmDeleteChecklistDialog(id) {
@@ -288,14 +333,8 @@ export default {
         this.confirmDelete = false;
       }).catch(error => {
         let message = error.response.data.message;
-        this.$toast.error(message).goAway(1500);
+        this.$toast.error(message);
       })
-    },
-    undoSignature() {
-      this.$refs.signature.undo();
-    },
-    clearSignature() {
-      this.$refs.signature.clear();
     },
     dataURLtoFile(dataurl, filename) {
       var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
@@ -313,10 +352,11 @@ export default {
       if (this.$refs.dialogForm.validate()) {
         let form = document.getElementById('dialogForm');
         const formData = new FormData(form);
-        if (this.project_type == 'ready') {
-          let signaturePng = this.$refs.signature.save();
-          let signatureFile = this.dataURLtoFile(signaturePng, 'signature.png');
-          formData.append('signature', signatureFile);
+        if (this.project_type === 'ready') {
+          const signature1File = this.dataURLtoFile(this.$refs.signature1.save(), 'signature1.png');
+          const signature2File = this.dataURLtoFile(this.$refs.signature2.save(), 'signature2.png');
+          formData.append('signature1', signature1File);
+          formData.append('signature2', signature2File);
         }
         this.changeProjectStatus({id: this.$route.params.id, data: formData, status: this.project_type}).then(res => {
           this.$router.back();
@@ -331,10 +371,23 @@ export default {
 }
 </script>
 <style>
+.theme--light.v-banner.v-sheet .v-banner__wrapper {
+  border-bottom: none;
+}
+</style>
+<style>
 .signature {
   border: 2px solid black;
   border-radius: 5px;
   background-origin: border-box;
   background-clip: content-box, border-box;
+}
+
+.signature-box {
+  width: 50%;
+}
+
+.signature-box:first-child {
+  padding-right: 10px;
 }
 </style>

@@ -73,7 +73,8 @@ export default {
     position: 'bottom-left',
     iconPack: 'fontawesome',
     keepOnHover: true,
-    type: ['success', 'info', 'error']
+    type: ['success', 'info', 'error'],
+    duration: 3500,
   },
   /*
   ** vuetify module configuration
