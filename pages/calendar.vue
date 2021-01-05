@@ -164,6 +164,7 @@
           </v-sheet>
           <v-sheet height="600" v-if="calendar">
             <v-calendar
+              locale="de"
               ref="calendar"
               color="primary"
               :events="events"
@@ -296,7 +297,7 @@ export default {
       this.$refs.calendar.checkChange();
     }).catch((error) => {
       let message = error.response.data.message;
-      this.$toast.error(message).goAway(1500);
+      this.$toast.error(message);
     });
   },
   methods: {
@@ -311,7 +312,7 @@ export default {
           this.addEvent(res.data.project)
           }).catch(err => {
           let error = err.response.data.message;
-          this.$toast.error(error).goAway(1500);
+          this.$toast.error(error);
         })
       }
     },
@@ -344,7 +345,7 @@ export default {
       }).catch((error) => {
         console.log(error);
         // let message = error.response.data.message;
-        // this.$toast.error(message).goAway(1500);
+        // this.$toast.error(message);
       });
     },
     getBrigadeList() {

@@ -46,7 +46,6 @@ export const mutations = {
       }
       return checklists_item
     });
-    console.log(state.checklists);
   },
 };
 
@@ -92,11 +91,18 @@ export const actions = {
 
   async addFileChecklistsItem({commit}, params) {
     return this.$axios.post('/checklist/'+params.id+'/add-file', params.data).then(res => {
+      commit('updateChecklistsItem', {id: params.id, data: res.data.data})
     })
   },
 
   async addNoteChecklistsItem({commit}, params) {
     return this.$axios.post('/checklist/'+params.id+'/add-note', params.data).then(res => {
+      commit('updateChecklistsItem', {id: params.id, data: res.data.data})
+    })
+  },
+
+  async addFailCodeChecklistsItem({commit}, params) {
+    return this.$axios.post('/checklist/'+params.id+'/add-fail-code', params.data).then(res => {
       commit('updateChecklistsItem', {id: params.id, data: res.data.data})
     })
   },

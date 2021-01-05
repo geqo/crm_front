@@ -8,7 +8,7 @@
         </v-toolbar>
         <v-card-text>
           <ValidationObserver ref="form" tag="div">
-            <v-form>
+            <v-form @keyup.native.enter="handleLogin">
               <ValidationProvider rules="required" v-slot="{ classes }" tag="div" class="modal-form registration-form form-group">
                 <v-text-field v-model="email" label="Login" name="login" prepend-icon="person" type="text" />
               </ValidationProvider>
@@ -67,7 +67,7 @@
                           this.getUser();
                       }).catch(err => {
                           let error = err.response.data.message;
-                          this.$toast.error(error).goAway(1500);
+                          this.$toast.error(error);
                       })
                   }
               });

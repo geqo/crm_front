@@ -1,6 +1,6 @@
 <template>
     <v-app dark>
-        <v-content>
+        <v-main>
             <v-container>
                 <v-row>
                     <v-col class="logo-col">
@@ -12,7 +12,7 @@
                 </v-row>
                 <Nuxt />
             </v-container>
-        </v-content>
+        </v-main>
     </v-app>
 </template>
 <style lang="scss">

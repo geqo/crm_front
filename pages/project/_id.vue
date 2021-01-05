@@ -19,8 +19,8 @@
           <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="submit()" id="projectForm">
             <v-text-field label="Client ID" v-if="project" v-model="project.client_id" disabled></v-text-field>
             <v-text-field name="address" disabled label="Adresse" :value="project.address"></v-text-field>
-            <v-text-field name="shipping_address" :disabled="project.status_id === 5" label="Shipping Address" :value="project.shipping_address"></v-text-field>
-            <v-text-field name="client_mobil" disabled label="Client Mobil" :value="project.client_mobil"></v-text-field>
+            <v-text-field name="shipping_address" :disabled="project.status_id === 5" label="Lieferanschrift" :value="project.shipping_address"></v-text-field>
+            <v-text-field name="client_mobil" disabled label="Kunde Mobil" :value="project.client_mobil"></v-text-field>
             <v-text-field name="order_date" disabled label="Auftrag Datum" :value="project.order_date"></v-text-field>
             <v-text-field name="order_number" disabled label="Auftrag Nummer" :value="project.order_number"></v-text-field>
             <v-text-field label="Vollständiger Name" v-model="project.full_name" disabled></v-text-field>
@@ -42,7 +42,7 @@
         <v-spacer></v-spacer>
         <v-col>
           <div v-if="project.status_id === 5">
-            <p class="text-center">Checklist Files</p>
+            <p class="text-center">fertige Dateien</p>
             <div class="overflow-y-auto file-content">
               <v-card v-if="project.checklist_pdf" class="mx-auto mb-2" max-width="344" outlined>
                 <v-list-item three-line>
@@ -80,17 +80,17 @@
           </div>
 
           <v-btn color="green" type="button" @click="showImages">
-            <span>Show Images</span>
+            <span>Bilder anzeigen</span>
           </v-btn>
         </v-col>
 
         <v-col v-if="project.mail_files && project.mail_files.length">
           <v-row>
             <v-col class="align-center col d-flex justify-center">
-              <span class="mt-0 text-center">Mail Files</span>
+              <span class="mt-0 text-center">Mail-Dateien</span>
             </v-col>
             <v-col>
-              <v-btn color="primary" class="float-right"@click.prevent="downloadAll">Download all</v-btn>
+              <v-btn color="primary" class="float-right"@click.prevent="downloadAll">alles herunterladen</v-btn>
             </v-col>
           </v-row>
           <div class="overflow-y-auto file-content">
@@ -124,7 +124,7 @@
           </div>
         </v-col>
         <v-col v-if="project.web_files && project.web_files.length">
-          <p class="text-center">Web Files</p>
+          <p class="text-center">Webdateien</p>
           <div class="overflow-y-auto file-content">
             <v-card v-for="file in project.web_files" :key="file.id" class="mx-auto mb-2" max-width="344" outlined>
             <v-list-item three-line>
@@ -156,13 +156,6 @@
           </div>
         </v-col>
       </v-row>
-      <v-row v-if="project.status_id === 5">
-
-        <v-col>
-          <p>signature</p>
-          <img class="w-100 h-100" :src="'https://api.esad-gmbh.de/storage/projects/2/' + project.signature" alt="">
-        </v-col>
-      </v-row>
 
       <v-row>
         <v-col>
@@ -170,7 +163,7 @@
             <v-expansion-panels>
               <v-expansion-panel
               >
-                <v-expansion-panel-header>Options</v-expansion-panel-header>
+                <v-expansion-panel-header>Auftragsinhalt</v-expansion-panel-header>
                 <v-expansion-panel-content v-if="project.options">
                   <v-row>
                     <v-col :class="{'bg-grin': option.is_x == 1}" class="py-0 option-item" xl="6" v-for="option in JSON.parse(project.options)"
@@ -277,6 +270,7 @@
     import VueSignature from "vue-signature"
 
     export default {
+      name: 'Project',
       components:{
         VueSignature
       },
@@ -322,13 +316,13 @@
               this.getChecklist({id: this.$route.params.id}).then().catch((error) => {
                 this.$nuxt.$loading.finish();
                 let message = error.response.data.message;
-                this.$toast.error(message).goAway(1500);
+                this.$toast.error(message);
               });
             }
           }).catch((error) => {
             this.$nuxt.$loading.finish();
             let message = error.response.data.message;
-            this.$toast.error(message).goAway(1500);
+            this.$toast.error(message);
           });
 
         },
@@ -356,7 +350,7 @@
                 this.$toast.success('Datei erfolgreich gelöscht!');
               }).catch(error => {
                 let message = error.response.data.message;
-                this.$toast.error(message).goAway(1500);
+                this.$toast.error(message);
               })
             },
             saveNote() {
@@ -372,7 +366,7 @@
                   this.$router.back();
                 }).catch(error => {
                   let message = error.response.data.message;
-                  this.$toast.error(message).goAway(1500);
+                  this.$toast.error(message);
                 })
               }
 
@@ -392,11 +386,11 @@
               this.$refs.signature.clear();
             },
             getColor(status) {
-                if (status == "Ready") {
+                if (status === "Ready") {
                     return "primary";
-                } else if (status == "Disputed") {
+                } else if (status === "Fehlermeldung") {
                     return "red";
-                } else if (status == "New") {
+                } else if (status === "Fertig") {
                     return "orange";
                 } else {
                     return "default";
@@ -407,7 +401,7 @@
               let formData = new FormData(form);
               if(this.$refs.form.validate()){
                 this.update({id: this.$route.params.id, data: formData}).then(res => {
-                  this.$toast.success('Project updated successfully!');
+                  this.$toast.success('Projekt erfolgreich aktualisiert!');
                   this.$refs.projectFile.value = null;
                 }).catch(error => {
                   let message = error.response.data.message;
@@ -419,7 +413,7 @@
               this.changeProjectStatusToWorking({id: id}).then(res => {
               }).catch(err => {
                 let message = err.response.data.message;
-                this.$toast.error(message).goAway(1500);
+                this.$toast.error(message);
               })
             },
             setStatusReadyToMontage(id){
@@ -427,7 +421,7 @@
                 this.$router.back();
               }).catch(err => {
                 let message = err.response.data.message;
-                this.$toast.error(message).goAway(1500);
+                this.$toast.error(message);
               })
             },
             moment(value, format) {

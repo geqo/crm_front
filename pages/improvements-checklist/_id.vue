@@ -10,7 +10,7 @@
         </v-col>
         <v-col>
           <v-btn color="primary" @click="openProjectDialog('backToReadyForMontage')">
-            Back to ready for testing
+            zurückpfeifen
           </v-btn>
         </v-col>
         <v-col>
@@ -184,12 +184,12 @@
         this.getChecklist({id: this.$route.params.id}).then().catch((error) => {
           this.$nuxt.$loading.finish();
           let message = error.response.data.message;
-          this.$toast.error(message).goAway(1500);
+          this.$toast.error(message);
         });
       }).catch((error) => {
         this.$nuxt.$loading.finish();
         let message = error.response.data.message;
-        this.$toast.error(message).goAway(1500);
+        this.$toast.error(message);
       });
     },
     methods: {
@@ -210,14 +210,14 @@
         let formData = new FormData(form);
         this.disableBtn = true;
         this.addFileChecklistsItem({id: this.checked_checklist.id, data: formData}).then(res => {
-          this.$toast.success('Files saved successfully!').goAway(1500);
+          this.$toast.success('Files saved successfully!');
           this.checklistFileDialog = false;
           this.disableBtn = false;
           this.$refs.checklistFile.value = null;
         }).catch(err => {
           this.disableBtn = false;
           let message = error.response.data.message;
-          this.$toast.error(message).goAway(1500);
+          this.$toast.error(message);
         })
 
       },
@@ -235,7 +235,7 @@
           }).catch(err => {
             this.disableBtn = false;
             let message = error.response.data.message;
-            this.$toast.error(message).goAway(1500);
+            this.$toast.error(message);
           })
         }
       },
@@ -250,7 +250,7 @@
         this.deleteChecklistsItem({id: this.checklist_id}).then().catch(error => {
           let message = error.response.data.message;
           this.confirmDelete = false;
-          this.$toast.error(message).goAway(1500);
+          this.$toast.error(message);
         })
       },
       undoSignature(){
@@ -293,7 +293,7 @@
           }).catch(error => {
             this.disableBtn = false
             let message = error.response.data.message;
-            this.$toast.error(message).goAway(1500);
+            this.$toast.error(message);
           })
         }
 

@@ -11,55 +11,86 @@
                 </v-list-item-content>
               </v-list-item>
             </v-card>
-            <v-list>
+            <v-row>
               <v-list-item>
                 <v-spacer></v-spacer>
                 <v-chip class="ma-2" color="secondary">Kelne Beanstandung</v-chip>
                 <v-chip class="ma-2" color="secondary">Siehe Fehler protokoll</v-chip>
               </v-list-item>
+            </v-row>
+            <template v-if="checklistsData">
+              <v-row v-for="(checklist, i) in checklistsData" :key="checklist.id" v-if="checklist.type === 'standard'">
+                <v-card class="my-3" style="width: 100%">
+                  <div class="d-flex flex-no-wrap justify-space-between">
+                    <v-card-title
+                      class="headline"
+                      v-text="checklist.name"
+                    />
+                    <v-card-title>
+                      <div class="d-flex flex-no-wrap mb-auto">
+                        <v-btn class="mr-3" v-if="checklist.notes || (checklist.images && checklist.images.length)"
+                               :to="`/standard-checklist/show/` + checklist.id" icon color="primary">
+                          <v-icon color="green darken-2">mdi-eye</v-icon>
+                        </v-btn>
+                        <v-btn color="secondary" class="mr-3" v-if="isForeman || isAdmin"
+                               @click="checklist.showNote ? $set(checklist, 'showNote', !checklist.showNote) : $set(checklist, 'showNote', true)"
+                        >
+                          Notiz{{checklist.notes ? '(1)' : ''}}
+                        </v-btn>
+                        <v-btn color="secondary" class="mr-3" v-if="isForeman || isAdmin"
+                               @click="showChecklistFileDialog(checklist)"
+                        >
+                          Foto{{checklist.images && checklist.images.length ? `(${checklist.images.length})` : ''}}
+                        </v-btn>
+                        <toggle-button class="mr-3"
+                                       :value="checklist.status === null ? true : !!checklist.status"
+                                       :font-size="14"
+                                       :labels="{checked: 'Ordnung', unchecked: 'Fehler'}"
+                                       :sync="true"
+                                       :color="{checked: '#4caf50', unchecked: '#f44336', disabled: '#808080'}"
+                                       :width="100"
+                                       :height="36"
+                                       @change="changeChecklistItemStatus(checklist.id, $event.value)"
+                        />
+                        <v-btn v-if="isAdmin" color="error" @click="showConfirmDeleteChecklistDialog( checklist.id)">
+                          <v-icon>delete</v-icon>
+                        </v-btn>
+                      </div>
+                    </v-card-title>
+                  </div>
 
-              <v-card
-                class="my-5 elevation-4"
-                v-for="(checklist, i) in checklists"
-                :key="checklist.id"
-                v-if="checklist.type === 'standard'"
+                  <v-card-text>
+                    <v-select
+                      v-if="checklist.status === 0"
+                      v-model="checklist.fail_code"
+                      :items="items"
+                      label="Fehlerkode"
+                      clearable
+                      @change="updateChecklistFailCode(checklist)"
+                    ></v-select>
+                    <template v-if="checklist.showNote">
+                      <v-textarea
+                        @click:clear="clearChecklistNote(checklist)"
+                        v-if="isForeman || isAdmin"
+                        clearable
+                        auto-grow
+                        rows="1"
+                        label="Notiz"
+                        name="notes"
+                        v-model="checklist.notes"
+                      >
+                        <template v-if="checklist.notes && checklist.notes.length > 0" v-slot:append-outer>
+                          <v-btn color="primary" @click="updateChecklistNote(checklist)">
+                            <v-icon>save</v-icon>
+                          </v-btn>
+                        </template>
+                      </v-textarea>
+                    </template>
+                  </v-card-text>
+                </v-card>
+              </v-row>
+            </template>
 
-              >
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-banner elevation="0" max-width="90%">{{ checklist.name }}</v-banner>
-                  </v-list-item-content>
-                  <v-btn color="secondary" class="mr-3" v-if="isForeman || isAdmin"
-                         @click="showChecklistFileDialog(checklist)">
-                    Bild hinzufügen
-                  </v-btn>
-                  <v-btn color="primary" class="mr-3" v-if="isForeman || isAdmin"
-                         @click="showChecklistNotDialog(checklist)">
-                    Notiz hinzufügen
-                  </v-btn>
-                  <v-btn class="mr-3" v-if="checklist.notes || checklist.images.length"
-                         :to="`/standard-checklist/show/` + checklist.id" icon color="primary">
-                    <v-icon color="green darken-2">mdi-eye</v-icon>
-                  </v-btn>
-                  <toggle-button class="mr-3 ml-6"
-                                 :value="checklist.status === null ? true : !!checklist.status"
-                                 :font-size="14"
-                                 :labels="{checked: 'in Ordnung', unchecked: 'Warnung'}"
-                                 :sync="true"
-                                 :color="{checked: '#4caf50', unchecked: '#f44336', disabled: '#808080'}"
-                                 :width="115"
-                                 :height="32"
-                                 @change="changeChecklistItemStatus(checklist.id, $event.value)"
-                  />
-                  <v-chip class="" v-if="isAdmin">
-                    <v-btn icon color="error" @click="showConfirmDeleteChecklistDialog( checklist.id)">
-                      <v-icon>delete</v-icon>
-                    </v-btn>
-                  </v-chip>
-                </v-list-item>
-              </v-card>
-
-            </v-list>
           </v-flex>
         </v-col>
       </v-row>
@@ -74,10 +105,10 @@
           <v-spacer></v-spacer>
 
           <v-btn class="mr-5" :color="finalStatus ? 'success' : 'red'" @click="openProjectDialog('ready')">
-            {{ finalStatus ? 'Fertig' : 'Closed the project, something want wrong' }}
+            Fertig
           </v-btn>
           <v-btn color="primary" @click="openProjectDialog('backToReadyForMontage')">
-            Back to ready for testing
+            zurückpfeifen
           </v-btn>
         </v-card>
       </v-row>
@@ -87,8 +118,9 @@
       <v-card class="mx-6 d-flex flex-column">
 
         <v-card-title>
-          By signing this checklist, you agree that the work was rendered efficiently and in accordance with the
-          list of works indicated in the order sheet.
+          Bestätigung des Kundes :
+          “Die Schränke sind Innen besenrein. Die Verpackung und der Montageablauf wurden entsorgt. Die Lieferung ist
+          vollständig. Die Artikel entsprechen meiner Bestellung in Farbe und Ausführung!
         </v-card-title>
 
         <v-card-text class="flex-grow-1">
@@ -96,10 +128,10 @@
             <div class="d-flex">
 
               <v-card class="signature-box" elevation="0">
-                <v-text-field :rules="requiredRule" name="first_name1" v-if="project_type === 'ready'"
-                              label="First Name"></v-text-field>
-                <v-text-field :rules="requiredRule" name="last_name1" v-if="project_type === 'ready'"
-                              label="Last Name"></v-text-field>
+                <v-text-field :rules="requiredRule" name="client_first_name" v-if="project_type === 'ready'"
+                              label="Kunde Vorname"></v-text-field>
+                <v-text-field :rules="requiredRule" name="client_last_name" v-if="project_type === 'ready'"
+                              label="Kunde Nachname"></v-text-field>
                 <vue-signature
                   :rules="requiredRule"
                   v-if="project_type === 'ready'"
@@ -110,13 +142,15 @@
                   :h="'62vh'"
                 />
                 <v-card-actions>
-                  <v-btn v-if="project_type === 'ready'" color="green" @click="$refs.signature1.clear()">Clear</v-btn>
+                  <v-btn v-if="project_type === 'ready'" color="green" @click="$refs.signature1.clear()">klar</v-btn>
                 </v-card-actions>
               </v-card>
               <v-card class="signature-box" elevation="0">
 
-                <v-text-field :rules="requiredRule" name="first_name2" v-if="project_type === 'ready'" label="First Name"></v-text-field>
-                <v-text-field :rules="requiredRule" name="last_name2" v-if="project_type === 'ready'" label="Last Name"></v-text-field>
+                <v-text-field :rules="requiredRule" name="worker_first_name" v-if="project_type === 'ready'"
+                              label="Monteur Vorname"></v-text-field>
+                <v-text-field :rules="requiredRule" name="worker_last_name" v-if="project_type === 'ready'"
+                              label="Monteur Nachname"></v-text-field>
                 <vue-signature
                   :rules="requiredRule"
                   v-if="project_type === 'ready'"
@@ -128,7 +162,7 @@
                 />
 
                 <v-card-actions>
-                  <v-btn v-if="project_type === 'ready'" color="green" @click="$refs.signature2.clear()">Clear</v-btn>
+                  <v-btn v-if="project_type === 'ready'" color="green" @click="$refs.signature2.clear()">klar</v-btn>
                 </v-card-actions>
               </v-card>
 
@@ -145,25 +179,9 @@
             {{ finalStatus ? 'Kelne Beanstandung' : 'Siehe Fehler protokoll' }}
           </v-chip>
           <v-spacer></v-spacer>
-          <v-btn large color="warning darken-1" @click="projectDialog = false">Cancel</v-btn>
-          <v-btn large color="primary darken-1" :disabled="disableBtn" @click="saveNote">Save</v-btn>
+          <v-btn large color="warning darken-1" @click="projectDialog = false">Stornieren</v-btn>
+          <v-btn :loading="loading" large color="primary darken-1" :disabled="disableBtn" @click="saveNote">Sparen</v-btn>
         </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="checklistNoteDialog" max-width="500">
-      <v-card>
-        <v-card-title class="headline">{{ project.client_id }}</v-card-title>
-        <v-card class="pa-6">
-          <v-form ref="checklistNoteForm" id="checklistNoteForm">
-            <v-textarea outlined autofocus label="Notiz" name="notes" :rules="notesRules"
-                        :value="checked_checklist.notes"></v-textarea>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" :disabled="disableBtn" text @click="sendChecklistNotes">speichern</v-btn>
-            </v-card-actions>
-          </v-form>
-        </v-card>
       </v-card>
     </v-dialog>
     <v-dialog v-model="checklistFileDialog" max-width="500">
@@ -208,6 +226,7 @@ import VueSignature from 'vue-signature'
 import { mapActions, mapState } from 'vuex';
 
 export default {
+  name: 'StandardChecklist',
   components: {
     VueSignature, ToggleButton
   },
@@ -240,37 +259,59 @@ export default {
       checklistNoteDialog: false,
       checklistFileDialog: false,
       formValidate: true,
+      checklistsData: [],
+      items: [
+        'Strom Installation nicht nach DIN Verordnung  gemacht',
+        'Wasser Zufluss',
+        'Wasser Abfluss',
+        'Maße passen nicht',
+        'Falsche Farbe',
+        'Ware passen nicht im Treppenhaus oder im Küchenbereich',
+        'Termin abgesagt',
+      ],
+      loading: false,
     }
   },
   computed: {
     ...mapState({
-      checklists: state => state.checklist.checklists,
       project: state => state.projects.project,
     }),
     finalStatus() {
-      return this.checklists.every(checklist => {
-        if(checklist.status === null) checklist.status = 1
-        return checklist.status
-      });
+      return this.checklistsData.every(checklist => checklist.status);
     }
   },
   mounted() {
     this.getProject({id: this.$route.params.id}).then(() => {
       this.$nuxt.$loading.finish();
-      this.getChecklist({id: this.$route.params.id}).then().catch((error) => {
+      this.getChecklist({id: this.$route.params.id}).then(() => {
+        this.updateLocalData()
+      }).catch((error) => {
         this.$nuxt.$loading.finish();
-        let message = error.response.data.message;
-        this.$toast.error(message).goAway(1500);
+        this.$toast.error(error.response.data.message);
       });
     }).catch((error) => {
       this.$nuxt.$loading.finish();
       let message = error.response.data.message;
-      this.$toast.error(message).goAway(1500);
+      this.$toast.error(message);
     });
   },
   methods: {
-    ...mapActions('projects', ['getProject', 'changeProjectStatusToWorking', 'readyForMontage', 'changeProjectStatusReadyToMontage', 'changeProjectStatus']),
-    ...mapActions('checklist', ['getChecklist', 'changeCheckboxStatus', 'changeStatus', 'deleteChecklistsItem', 'addFileChecklistsItem', 'addNoteChecklistsItem']),
+    ...mapActions('projects', [
+      'getProject',
+      'changeProjectStatusToWorking',
+      'readyForMontage',
+      'changeProjectStatusReadyToMontage',
+      'changeProjectStatus'
+    ]),
+    ...mapActions('checklist', [
+      'getChecklist',
+      'changeCheckboxStatus',
+      'changeStatus',
+      'deleteChecklistsItem',
+      'addFileChecklistsItem',
+      'addNoteChecklistsItem',
+      'addFailCodeChecklistsItem'
+    ]),
 
     showChecklistNotDialog(checklist) {
       console.log(checklist);
@@ -286,44 +327,19 @@ export default {
       let formData = new FormData(form);
       this.disableBtn = true;
       this.addFileChecklistsItem({id: this.checked_checklist.id, data: formData}).then(res => {
-        this.$toast.success('Files saved successfully!').goAway(1500);
+        this.updateLocalData()
+        this.$toast.success('Dateien erfolgreich gespeichert!');
         this.checklistFileDialog = false;
         this.disableBtn = false;
         this.$refs.checklistFile.value = null;
       }).catch(err => {
         this.disableBtn = false;
-        let message = error.response.data.message;
+        let message = err.response.data.message;
         this.$toast.error(message);
       })
 
     },
-    sendChecklistNotes() {
-      if (this.$refs.dialogForm.validate()) {
-        this.disableBtn = true;
-        let form = document.getElementById('checklistNoteForm');
-        let formData = new FormData(form);
 
-        this.addNoteChecklistsItem({id: this.checked_checklist.id, data: formData}).then(res => {
-          this.$toast.success('Notiz erfolgreich gespeichert!');
-          this.checklistNoteDialog = false;
-          this.disableBtn = false;
-          document.getElementById('checklistNoteForm').reset();
-        }).catch(err => {
-          this.disableBtn = false;
-          let message = error.response.data.message;
-          this.$toast.error(message);
-        })
-      }
-    },
-
-    changeChecklistItemStatus(id, status) {
-      this.changeStatus({id: id, status: status * 1}).then(res => {
-        this.$toast.success('Notiz erfolgreich gespeichert!');
-      }).catch(err => {
-        let message = error.response.data.message;
-        this.$toast.error(message);
-      })
-    },
     showConfirmDeleteChecklistDialog(id) {
       this.confirmDelete = true;
       this.checklist_id = id;
@@ -350,23 +366,64 @@ export default {
     },
     saveNote() {
       if (this.$refs.dialogForm.validate()) {
+        this.loading = true
         let form = document.getElementById('dialogForm');
         const formData = new FormData(form);
         if (this.project_type === 'ready') {
-          const signature1File = this.dataURLtoFile(this.$refs.signature1.save(), 'signature1.png');
-          const signature2File = this.dataURLtoFile(this.$refs.signature2.save(), 'signature2.png');
-          formData.append('signature1', signature1File);
-          formData.append('signature2', signature2File);
+          const signature1File = this.dataURLtoFile(this.$refs.signature1.save(), 'client_signature.png');
+          const signature2File = this.dataURLtoFile(this.$refs.signature2.save(), 'worker_signature.png');
+          formData.append('client_signature', signature1File);
+          formData.append('worker_signature', signature2File);
         }
         this.changeProjectStatus({id: this.$route.params.id, data: formData, status: this.project_type}).then(res => {
           this.$router.back();
         }).catch(error => {
           let message = error.response.data.message;
-          this.$toast.error(message).goAway(1500);
+          this.$toast.error(message);
+        }).finally(() => {
+          this.loading = false
         })
       }
 
     },
+    changeChecklistItemStatus(id, status) {
+      this.changeStatus({id: id, status: status * 1}).then(res => {
+        this.updateLocalData()
+        this.$toast.success('Status erfolgreich gespeichert!');
+      }).catch(err => {
+        let message = err.response.data.message;
+        this.$toast.error(message);
+      })
+    },
+    clearChecklistNote(checklist) {
+      checklist.notes = null
+      this.updateChecklistNote(checklist)
+    },
+    updateChecklistNote(checklist) {
+      this.addNoteChecklistsItem({id: checklist.id, data: checklist}).then(res => {
+        this.updateLocalData()
+        this.$toast.success('Notiz erfolgreich gespeichert!');
+      }).catch(err => {
+        let error = err.response.data.message;
+        this.$toast.error(error);
+      })
+    },
+    updateChecklistFailCode(checklist) {
+      this.addFailCodeChecklistsItem({id: checklist.id, data: checklist, type: checklist.type}).then(res => {
+        this.updateLocalData()
+        this.$toast.success('Fehlerkode erfolgreich gespeichert!');
+      }).catch(err => {
+        let error = err.response.data.message;
+        this.$toast.error(error);
+      })
+    },
+    updateLocalData() {
+      this.checklistsData = this.$store.state.checklist.checklists.map(checklist => {
+        const data = { ...checklist };
+        if (data.status === null) data.status = 1;
+        return data;
+      });
+    }
   }
 }
 </script>
