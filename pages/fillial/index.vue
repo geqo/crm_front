@@ -80,7 +80,7 @@
             this.getFillials().then(res => {
             }).catch(err => {
                 let error = err.response.data.message;
-                this.$toast.error(error).goAway(1500);
+                this.$toast.error(error);
             });
         },
         methods: {
@@ -91,22 +91,22 @@
             },
             checkGmail() {
                 this.$axios.get('checkGmail').then(res => {
-                    this.$toast.success(res.data.message).goAway(1500);
+                    this.$toast.success(res.data.message);
                 }).catch(error => {
                     let message = error.response.data.message;
-                    this.$toast.error(message).goAway(1500);
+                    this.$toast.error(message);
                 })
             },
             acceptDeleteFillial() {
                 this.deleteFillial({id: this.fillial_id}).then(res => {
-                    this.$toast.success(res.data.message).goAway(1500);
+                    this.$toast.success(res.data.message);
                     this.confirmDelete = false;
                     this.user_id = null;
                 }).catch(err => {
                     this.confirmDelete = false;
                     this.user_id = null;
                     let error = err.response.data.message;
-                    this.$toast.error(error).goAway(1500);
+                    this.$toast.error(error);
                 });
             }
 

@@ -47,8 +47,8 @@
                     :items="fillials"
                     item-text="name"
                     item-value="id"
-                    :rules="[v => !!v || 'Filial ist erforderlich']"
-                    label="Fillial"
+                    :rules="[v => !!v || 'Filliale ist erforderlich']"
+                    label="Filliale"
                     required
                 ></v-select>
 
@@ -108,11 +108,11 @@
           v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
         ],
         roles: [
-          {value: 1, text: 'admin'},
-          {value: 2, text: 'storekeeper'},
-          {value: 3, text: 'manager'},
-          {value: 4, text: 'foreman'},
-          {value: 5, text: 'obinspector'},
+          {value: 1, text: 'Admin'},
+          {value: 2, text: 'Lagerhalter'},
+          {value: 3, text: 'Manager'},
+          {value: 4, text: 'Vorarbeiter'},
+          {value: 5, text: 'OBI Mitarbeiter'},
         ],
         profileData: {},
           profileCredentials: {},
@@ -145,7 +145,7 @@
             this.fillials = res.data.fillials;
           }).catch(err => {
             let error = err.response.data.message;
-            this.$toast.error(error).goAway(1500);
+            this.$toast.error(error);
           })
         } else {
           this.fillials = [];
@@ -154,11 +154,11 @@
         updatePassword() {
             if(this.$refs.credentialsForm.validate()){
                 this.$axios.put('users/update-password/' + this.profile.id, this.profileCredentials).then(res => {
-                    this.$toast.success(res.data.message).goAway(1500);
+                    this.$toast.success(res.data.message);
                     this.profileCredentials = {}
                 }).catch(err => {
                     let error = err.response.data.message;
-                    this.$toast.error(error).goAway(1500);
+                    this.$toast.error(error);
                 })
             }
         },
@@ -171,14 +171,14 @@
               _this.$router.push({ name: 'profile' });
             }).catch(err => {
               let error = err.response.data.message;
-              _this.$toast.error(error).goAway(1500);
+              _this.$toast.error(error);
             })
           } else {
             _this.editProfile({id: this.user_id, data: this.profileData}).then(res => {
               this.$router.push({ name: 'profile' });
             }).catch(err => {
               let error = err.response.data.message;
-              _this.$toast.error(error).goAway(1500);
+              _this.$toast.error(error);
             })
           }
 

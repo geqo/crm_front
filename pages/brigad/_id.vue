@@ -4,7 +4,7 @@
             <v-card class="my-5 elevation-4">
                 <v-list-item>
                     <v-list-item-content>
-                        <v-list-item-title>{{brigad_id == 'add' ? 'hinzufügen' : 'bearbeiten'}} Brigad</v-list-item-title>
+                        <v-list-item-title>{{brigad_id == 'add' ? 'hinzufügen' : 'bearbeiten'}} Team</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-card>
@@ -122,7 +122,7 @@
           this.$store.commit('foreman/removeWorker', {id: 0, index: index})
         } else {
           this.deleteBrigadeWorkers({id: 0, index: index}).then(res => {
-            this.$toast.success('Brigade worker has successfully deleted').goAway(1500);
+            this.$toast.success('Brigade worker has successfully deleted');
           })
         }
       },
@@ -135,14 +135,14 @@
               this.$router.push({ name: 'brigad' });
             }).catch(err => {
               let error = err.response.data.message;
-              this.$toast.error(error).goAway(1500);
+              this.$toast.error(error);
             })
           } else {
             this.editForeman({id: this.brigad_id, data: formData}).then(res => {
               this.$router.push({ name: 'brigad' });
             }).catch(err => {
               let error = err.response.data.message;
-              this.$toast.error(error).goAway(1500);
+              this.$toast.error(error);
             })
           }
 

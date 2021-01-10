@@ -56,7 +56,7 @@ export default {
         },
         {
           icon: "mdi-apps",
-          title: "endabnahmeprotokoll",
+          title: "Endabnahmeprotokoll",
           availability: [1, 4],
           to: "/standard-checklist"
         },
@@ -75,7 +75,7 @@ export default {
         {
           icon: "mdi-account",
           availability: [1],
-          title: "Fillial",
+          title: "Filliale",
           to: "/fillial"
         },
         {
@@ -92,7 +92,7 @@ export default {
         // },
         {
           icon: "mdi-account-group",
-          title: "Brigad",
+          title: "Team",
           availability: [1, 3],
           to: "/brigad"
         },

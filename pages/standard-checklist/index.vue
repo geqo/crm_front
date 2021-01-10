@@ -44,7 +44,7 @@
         this.getProjects(this.filter).then(() => {
         }).catch((error) => {
           let message = error.response.data.message;
-          this.$toast.error(message).goAway(1500);
+          this.$toast.error(message);
         });
       }
     }

@@ -24,7 +24,7 @@
           Passwort aktualisieren
         </v-btn>
       </v-form>
-    
+
     </v-flex>
   </v-layout>
 </template>
@@ -50,11 +50,11 @@
       updatePassword() {
         if(this.$refs.credentialsForm.validate()){
           this.$axios.put('users/update-password/' + this.user.id, this.profileCredentials).then(res => {
-            this.$toast.success(res.data.message).goAway(1500);
+            this.$toast.success(res.data.message);
             this.profileCredentials = {}
           }).catch(err => {
             let error = err.response.data.message;
-            this.$toast.error(error).goAway(1500);
+            this.$toast.error(error);
           })
         }
       },

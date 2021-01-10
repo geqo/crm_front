@@ -70,7 +70,7 @@ export default {
     this.getProfiles().then(res => {
     }).catch(err => {
       let error = err.response.data.message;
-      this.$toast.error(error).goAway(1500);
+      this.$toast.error(error);
     });
   },
   methods: {
@@ -81,14 +81,14 @@ export default {
     },
     deleteUser() {
       this.deleteProfile({id: this.user_id}).then(res => {
-        this.$toast.success(res.data.message).goAway(1500);
+        this.$toast.success(res.data.message);
         this.confirmDelete = false;
         this.user_id = null;
       }).catch(err => {
         this.confirmDelete = false;
         this.user_id = null;
         let error = err.response.data.message;
-        this.$toast.error(error).goAway(1500);
+        this.$toast.error(error);
       });
     },
 

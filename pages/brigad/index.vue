@@ -4,7 +4,7 @@
       <v-card class="my-5 elevation-4">
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title>Brigad</v-list-item-title>
+            <v-list-item-title>Team</v-list-item-title>
           </v-list-item-content>
           <v-btn color="primary" to="/brigad/add">
             Team hinzufügen
@@ -80,14 +80,14 @@ export default {
     },
     removeBrigad() {
       this.deleteBrigad({id: this.brigad_id}).then(res => {
-        this.$toast.success('Team gelöscht!').goAway(1500);
+        this.$toast.success('Team gelöscht!');
         this.confirmDelete = false;
         this.brigad_id = null;
       }).catch(err => {
         this.confirmDelete = false;
         this.brigad_id = null;
         let error = err.response.data.message;
-        this.$toast.error(error).goAway(1500);
+        this.$toast.error(error);
       });
     },
     getColor(status) {

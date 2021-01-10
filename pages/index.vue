@@ -87,7 +87,8 @@ export default {
       filterData: {},
       filter: {
         foreman_id: null,
-        status_id: null
+        status_id: null,
+        fillial: null
       },
     }
   },
@@ -115,8 +116,17 @@ export default {
 
     getFilterData() {
       this.$axios.get('projects/getFilterData').then(res => {
+        res.data.statuses = res.data.statuses.map(status => {
+          if(status.name === 'new') {
+            status.name = 'Neu'
+          }
+          if(status.name === 'ready') {
+            status.name = 'Fertig'
+          }
+          return status
+        })
         this.filterData = res.data;
-        this.filterData.fillials.unshift('Alle');
+        this.filterData.fillials.unshift({id: null, name: 'Alle'});
         this.filterData.brigads.unshift({id: null, name: 'Alle'});
         this.filterData.statuses.unshift({id: null, name: 'Alle'});
       }).catch(error => {

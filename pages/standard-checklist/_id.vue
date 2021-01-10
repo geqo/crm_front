@@ -7,7 +7,7 @@
             <v-card class="my-5 elevation-4">
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title>endabnahmeprotokoll</v-list-item-title>
+                  <v-list-item-title>Endabnahmeprotokoll</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-card>

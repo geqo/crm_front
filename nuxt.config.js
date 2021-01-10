@@ -55,7 +55,7 @@ export default {
   */
   axios: {
     https: false,
-    baseURL: 'https://api.esad-gmbh.de/api/auth/login'
+    baseURL: 'https://api.esad-gmbh.de/api'
   },
   auth: {
     strategies: {

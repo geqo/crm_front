@@ -66,11 +66,11 @@
           v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
         ],
         roles: [
-          {value: 1, text: 'admin'},
-          {value: 2, text: 'storekeeper'},
-          {value: 3, text: 'manager'},
-          {value: 4, text: 'foreman'},
-          {value: 5, text: 'obinspector'},
+          {value: 1, text: 'Admin'},
+          {value: 2, text: 'Lagerhalter'},
+          {value: 3, text: 'Manager'},
+          {value: 4, text: 'Vorarbeiter'},
+          {value: 5, text: 'OBI Mitarbeiter'},
         ],
         checklistData: {}
       };
@@ -109,14 +109,14 @@
               this.$router.back();
             }).catch(err => {
               let error = err.response.data.message;
-              this.$toast.error(error).goAway(1500);
+              this.$toast.error(error);
             })
           } else {
             this.editChecklistsItem({id: this.id, data: formData, type: this.type}).then(res => {
               this.$router.back();
             }).catch(err => {
               let error = err.response.data.message;
-              this.$toast.error(error).goAway(1500);
+              this.$toast.error(error);
             })
           }
 

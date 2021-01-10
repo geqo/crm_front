@@ -87,14 +87,14 @@
                         _this.$router.push({ name: 'fillial' });
                     }).catch(err => {
                         let error = err.response.data.message;
-                        _this.$toast.error(error).goAway(1500);
+                        _this.$toast.error(error);
                     })
                 } else {
                     _this.editFillial({id: this.fillial_id, data: this.formData}).then(res => {
                         this.$router.push({ name: 'fillial' });
                     }).catch(err => {
                         let error = err.response.data.message;
-                        _this.$toast.error(error).goAway(1500);
+                        _this.$toast.error(error);
                     })
                 }
 
