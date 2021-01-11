@@ -26,7 +26,7 @@
                     :value="foremanData.brigadir_id"
                     :items="foreman_list"
                     name="brigadir_id"
-                    :rules="[v => !!v || 'Item is required']"
+                    :rules="[v => !!v || 'erforderlich']"
                     label="Brigadirs"
                     item-text="name"
                     item-value="id"
